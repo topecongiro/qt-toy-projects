@@ -8,6 +8,7 @@
 class SysInfoWidget : public QWidget
 {
     Q_OBJECT
+
 public:
     explicit SysInfoWidget(QWidget *parent = nullptr, int startDelayMs = 500, int updateSeriesDelayMs = 500);
 

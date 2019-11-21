@@ -3,6 +3,9 @@
 
 #include <QMainWindow>
 
+class CpuWidget;
+class MemoryWidget;
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -17,5 +20,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    CpuWidget *mCpuWidget;
+    MemoryWidget *mMemoryWidget;
 };
 #endif // MAINWINDOW_H
