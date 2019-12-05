@@ -27,7 +27,7 @@ public slots:
     void resetIndex();
 
 private:
-    void filterData(const QList<int>& data, const QString& pattern);
+    void filterData(const QStringList& data, const QString& pattern);
     void cancel();
 
     int m_RequestedNum;
@@ -35,7 +35,7 @@ private:
     QList<int> m_IndexList;
 
     // This is the actual data.
-    QList<int> m_Data;
+    QStringList m_Data;
     QString m_Pat;
 
     QMutex mutex;

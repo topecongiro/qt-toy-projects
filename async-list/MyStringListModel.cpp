@@ -14,11 +14,11 @@
 
 static std::atomic_bool isCancelled(false);
 
-void MyStringListModel::filterData(const QList<int>& data, const QString& pattern) {
+void MyStringListModel::filterData(const QStringList& data, const QString& pattern) {
     futureWatcher.setFuture(QtConcurrent::run([&data, pattern]() {
         QList<int> result;
         for (int i = 0; !isCancelled && i < data.size(); i++) {
-            if (QString("%1").arg(data[i]).contains(pattern)) {
+            if (data[i].contains(pattern)) {
                 result << i;
             }
         }
@@ -40,7 +40,7 @@ void MyStringListModel::cancel() {
 MyStringListModel::MyStringListModel(QObject *parent)
     : QAbstractListModel(parent),
       m_RequestedNum(0),
-      m_IndexList(),
+      m_IndexList({0, 1, 2, 3, 4, 5, 6, 7, 8, 9}),
       m_Data(),
       m_Pat(""),
       futureWatcher(parent)
@@ -48,7 +48,13 @@ MyStringListModel::MyStringListModel(QObject *parent)
     auto current = QTime::currentTime().msec();
     qsrand(static_cast<uint>(current));
     for (int i = 0; i < 100000; i++) {
-        m_Data.push_back(qrand());
+        QString s;
+        int size = 64 + qrand() % 64;
+        int diff = 'z' - 'a';
+        for (int j = 0; j < size; j++) {
+            s.push_back('a' + qrand() % diff);
+        }
+        m_Data.push_back(s);
     }
 
     connect(&futureWatcher, &QFutureWatcher<QList<int>>::finished,
@@ -78,13 +84,7 @@ QVariant MyStringListModel::data(const QModelIndex &index, int role) const
 
     switch (role) {
     case Qt::DisplayRole: {
-        int rowData = m_Data[m_IndexList[row]];
-        const auto target = QString("%1").arg(rowData);
-        if (target.contains(m_Pat)) {
-            return QVariant(rowData);
-        } else {
-            return QVariant();
-        }
+        return QVariant(m_Data[m_IndexList[row]]);
     }
     case Qt::FontRole: {
         QFont font;
